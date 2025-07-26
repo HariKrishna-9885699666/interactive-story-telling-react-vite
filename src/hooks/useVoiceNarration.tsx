@@ -14,7 +14,9 @@ export const useVoiceNarration = () => {
   const wordsRef = useRef<string[]>([]);
   const onWordHighlightRef = useRef<((wordIndex: number) => void) | undefined>(undefined);
   const fallbackTimerRef = useRef<number | null>(null);
-  const lastBoundaryTimeRef = useRef<number>(0);
+  const speechStartTimeRef = useRef<number>(0);
+  const boundaryTimesRef = useRef<number[]>([]);
+  const adaptiveTimingRef = useRef<number[]>([]);
 
   // Load available voices
   useEffect(() => {
@@ -35,6 +37,82 @@ export const useVoiceNarration = () => {
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
   }, []);
 
+  // Learn timing patterns from successful boundary events
+  const updateAdaptiveTiming = useCallback((wordIndex: number, actualTime: number) => {
+    const words = wordsRef.current;
+    if (!words[wordIndex]) return;
+    
+    const word = words[wordIndex];
+    const expectedBase = 300 + (word.length * 25);
+    const ratio = actualTime / expectedBase;
+    
+    // Store the ratio for this word type
+    adaptiveTimingRef.current[wordIndex] = actualTime;
+    
+    // Update future predictions based on learned patterns
+    for (let i = wordIndex + 1; i < words.length; i++) {
+      if (!adaptiveTimingRef.current[i]) {
+        const futureWord = words[i];
+        let predictedTime = 300 + (futureWord.length * 25);
+        
+        // Apply learned ratio
+        predictedTime *= ratio;
+        
+        // Adjust for punctuation
+        if (/[.,;:]$/.test(futureWord)) predictedTime += 100;
+        if (/[!?]$/.test(futureWord)) predictedTime += 150;
+        if (/[.]$/.test(futureWord)) predictedTime += 200;
+        
+        adaptiveTimingRef.current[i] = Math.max(200, Math.min(predictedTime, 1000));
+      }
+    }
+  }, []);
+
+  // Adaptive fallback timer that learns from speech patterns
+  const startAdaptiveFallback = useCallback((startIndex: number = 0) => {
+    if (fallbackTimerRef.current) {
+      clearTimeout(fallbackTimerRef.current);
+    }
+    
+    let currentIndex = startIndex;
+    const words = wordsRef.current;
+    
+    const scheduleNextWord = () => {
+      if (currentIndex >= words.length) {
+        setCurrentWordIndex(-1);
+        return;
+      }
+      
+      setCurrentWordIndex(currentIndex);
+      onWordHighlightRef.current?.(currentIndex);
+      
+      // Calculate next word timing
+      let nextTiming = adaptiveTimingRef.current[currentIndex];
+      
+      if (!nextTiming) {
+        // Fallback calculation if we don't have learned timing
+        const word = words[currentIndex];
+        nextTiming = 300 + (word.length * 25);
+        
+        if (/[.,;:]$/.test(word)) nextTiming += 100;
+        if (/[!?]$/.test(word)) nextTiming += 150;
+        if (/[.]$/.test(word)) nextTiming += 200;
+        
+        // Adjust based on speech rate
+        nextTiming = nextTiming / 0.8;
+        nextTiming = Math.max(200, Math.min(nextTiming, 1000));
+      }
+      
+      currentIndex++;
+      
+      if (currentIndex < words.length) {
+        fallbackTimerRef.current = window.setTimeout(scheduleNextWord, nextTiming);
+      }
+    };
+    
+    scheduleNextWord();
+  }, []);
+
   // Speak with word highlighting (syncs with voice, fallback for mobile)
   const speakNarration = useCallback((text: string, onWordHighlight?: (wordIndex: number) => void) => {
     speechSynthesis.cancel();
@@ -42,11 +120,14 @@ export const useVoiceNarration = () => {
     setIsPaused(false);
     setCurrentWordIndex(-1);
     
-    // Clear any existing fallback timer
+    // Clear any existing fallback timer and reset timing data
     if (fallbackTimerRef.current) {
       clearTimeout(fallbackTimerRef.current);
       fallbackTimerRef.current = null;
     }
+    
+    boundaryTimesRef.current = [];
+    adaptiveTimingRef.current = [];
     
     if (!isEnabled || isMuted || !text.trim()) return;
 
@@ -55,10 +136,11 @@ export const useVoiceNarration = () => {
       wordsRef.current = words;
       onWordHighlightRef.current = onWordHighlight;
 
-      // Create a more accurate mapping of character positions to word indices
+      // Create character to word mapping for boundary events
       const charToWordMap = new Map<number, number>();
       let lastIndex = 0;
       const wordPositions: {word: string; startIndex: number; endIndex: number; wordIndex: number}[] = [];
+      
       for (let i = 0; i < words.length; i++) {
         const word = words[i];
         const startIndex = text.indexOf(word, lastIndex);
@@ -68,6 +150,7 @@ export const useVoiceNarration = () => {
           lastIndex = endIndex;
         }
       }
+      
       for (let i = 0; i < text.length; i++) {
         const wordPosition = wordPositions.find(pos => i >= pos.startIndex && i < pos.endIndex);
         if (wordPosition) {
@@ -82,57 +165,15 @@ export const useVoiceNarration = () => {
       if (selectedVoice) utterance.voice = selectedVoice;
       utteranceRef.current = utterance;
 
-      let currentWordIndexInternal = -1;
+      let lastBoundaryWordIndex = -1;
+      let boundaryEventCount = 0;
       const mobile = isMobile();
-      
-      // Calculate dynamic timing for each word based on speech characteristics
-      const calculateWordTiming = (word: string, rate: number = 0.8) => {
-        let baseTime = 300; // Base time per word in ms
-        
-        // Adjust for word length
-        baseTime += word.length * 30;
-        
-        // Adjust for punctuation (natural pauses)
-        if (/[.,;:]$/.test(word)) baseTime += 150;
-        if (/[!?]$/.test(word)) baseTime += 200;
-        if (/[.]$/.test(word)) baseTime += 250; // Sentence endings
-        
-        // Adjust for speech rate
-        baseTime = baseTime / rate;
-        
-        // Ensure minimum and maximum bounds
-        return Math.max(200, Math.min(baseTime, 1200));
-      };
+      let usingFallback = false;
 
-      // Fallback timer function with dynamic timing
-      const startFallbackTimer = () => {
-        if (fallbackTimerRef.current) clearInterval(fallbackTimerRef.current);
-        
-        const scheduleNextWord = () => {
-          currentWordIndexInternal++;
-          if (currentWordIndexInternal < words.length) {
-            setCurrentWordIndex(currentWordIndexInternal);
-            onWordHighlight?.(currentWordIndexInternal);
-            
-            // Calculate timing for next word
-            const nextWordTime = calculateWordTiming(words[currentWordIndexInternal], 0.8);
-            fallbackTimerRef.current = window.setTimeout(scheduleNextWord, nextWordTime);
-          } else {
-            setCurrentWordIndex(-1);
-            fallbackTimerRef.current = null;
-          }
-        };
-        
-        // Start with first word timing
-        const firstWordTime = calculateWordTiming(words[0] || '', 0.8);
-        fallbackTimerRef.current = window.setTimeout(scheduleNextWord, firstWordTime);
-      };
-
-      // Enhanced boundary event handler
+      // Enhanced boundary event handler that learns timing
       utterance.onboundary = (event) => {
-        if (event.name === 'word') {
-          lastBoundaryTimeRef.current = Date.now();
-          
+        if (event.name === 'word' && !usingFallback) {
+          const currentTime = Date.now();
           const charIndex = event.charIndex;
           let wordIndex = -1;
           
@@ -153,59 +194,71 @@ export const useVoiceNarration = () => {
           }
           
           if (wordIndex >= 0 && wordIndex < words.length) {
-            currentWordIndexInternal = wordIndex;
+            boundaryEventCount++;
+            boundaryTimesRef.current[wordIndex] = currentTime;
+            
+            // Learn timing from successful boundary events
+            if (lastBoundaryWordIndex >= 0 && lastBoundaryWordIndex < wordIndex - 1) {
+              const timeDiff = currentTime - boundaryTimesRef.current[lastBoundaryWordIndex];
+              const wordsSpanned = wordIndex - lastBoundaryWordIndex;
+              const avgTimePerWord = timeDiff / wordsSpanned;
+              
+              // Update timing for the words we learned about
+              for (let i = lastBoundaryWordIndex + 1; i <= wordIndex; i++) {
+                updateAdaptiveTiming(i, avgTimePerWord);
+              }
+            }
+            
+            lastBoundaryWordIndex = wordIndex;
             setCurrentWordIndex(wordIndex);
             onWordHighlight?.(wordIndex);
-            
-            // If we're getting boundary events, clear fallback timer
-            if (fallbackTimerRef.current) {
-              clearTimeout(fallbackTimerRef.current);
-              fallbackTimerRef.current = null;
-            }
           }
         }
       };
 
       utterance.onstart = () => {
         setIsSpeaking(true);
-        currentWordIndexInternal = -1;
-        lastBoundaryTimeRef.current = Date.now();
+        speechStartTimeRef.current = Date.now();
+        boundaryEventCount = 0;
         
+        // Always highlight first word immediately
         setTimeout(() => {
-          // Always highlight first word
-          currentWordIndexInternal = 0;
           setCurrentWordIndex(0);
           onWordHighlight?.(0);
-          
-          // For mobile or as a safety net, check if boundary events are working
-          setTimeout(() => {
-            const timeSinceLastBoundary = Date.now() - lastBoundaryTimeRef.current;
+          boundaryTimesRef.current[0] = Date.now();
+        }, 100);
+        
+        // Monitor for boundary events and switch to fallback if needed
+        setTimeout(() => {
+          if (boundaryEventCount < 2 || mobile) {
+            console.log('Switching to adaptive fallback - boundary events:', boundaryEventCount);
+            usingFallback = true;
             
-            // If we haven't received boundary events recently, or we're on mobile, start fallback
-            if (mobile || timeSinceLastBoundary > 800) {
-              console.log('Starting fallback timer for word highlighting');
-              // Start from word 1 since we already highlighted word 0
-              currentWordIndexInternal = 0;
-              startFallbackTimer();
-            }
-          }, 800); // Reduced delay for better sync
+            // Start adaptive fallback from word 1 (we already showed word 0)
+            startAdaptiveFallback(1);
+          }
+        }, 1200);
+        
+        // Secondary check - if boundary events stop coming
+        const boundaryMonitor = setInterval(() => {
+          if (!speechSynthesis.speaking || usingFallback) {
+            clearInterval(boundaryMonitor);
+            return;
+          }
           
-          // Also set up a monitoring interval to detect if boundary events stop coming
-          const boundaryMonitor = setInterval(() => {
-            if (!speechSynthesis.speaking) {
-              clearInterval(boundaryMonitor);
-              return;
-            }
+          const currentTime = Date.now();
+          const lastBoundaryTime = Math.max(...boundaryTimesRef.current.filter(t => t > 0));
+          
+          if (currentTime - lastBoundaryTime > 1500) {
+            console.log('Boundary events stopped, switching to adaptive fallback');
+            clearInterval(boundaryMonitor);
+            usingFallback = true;
             
-            const timeSinceLastBoundary = Date.now() - lastBoundaryTimeRef.current;
-            if (timeSinceLastBoundary > 1000 && currentWordIndexInternal < words.length - 1) {
-              console.log('Boundary events stopped, switching to fallback');
-              clearInterval(boundaryMonitor);
-              startFallbackTimer();
-            }
-          }, 800);
-          
-        }, 200);
+            // Find current word index and continue from there
+            const currentIndex = boundaryTimesRef.current.filter(t => t > 0).length;
+            startAdaptiveFallback(currentIndex);
+          }
+        }, 1000);
       };
 
       utterance.onend = () => {
@@ -232,7 +285,7 @@ export const useVoiceNarration = () => {
         speechSynthesis.speak(utterance);
       }, 300);
     }, 100);
-  }, [isEnabled, isMuted, selectedVoice, isMobile]);
+  }, [isEnabled, isMuted, selectedVoice, isMobile, startAdaptiveFallback, updateAdaptiveTiming]);
 
   const stop = useCallback(() => {
     console.log('Stopping speech');
@@ -241,7 +294,7 @@ export const useVoiceNarration = () => {
     setIsPaused(false);
     setCurrentWordIndex(-1);
     if (fallbackTimerRef.current) {
-      clearInterval(fallbackTimerRef.current);
+      clearTimeout(fallbackTimerRef.current);
       fallbackTimerRef.current = null;
     }
   }, []);
@@ -261,8 +314,7 @@ export const useVoiceNarration = () => {
     if (speechSynthesis.paused) {
       speechSynthesis.resume();
       setIsPaused(false);
-      // Restart monitoring for boundary events after resume
-      lastBoundaryTimeRef.current = Date.now();
+      // Note: We don't restart fallback here as speech should continue from where it paused
     }
   }, []);
 
