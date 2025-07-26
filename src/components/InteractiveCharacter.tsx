@@ -19,8 +19,24 @@ const InteractiveCharacter: React.FC<InteractiveCharacterProps> = ({
   isVisible,
   onClick
 }) => {
+
   const [isClicked, setIsClicked] = useState(false);
   const [isHighlighted, setIsHighlighted] = useState(false);
+
+  // Multi-step fallback for AI images
+  const [imgStep, setImgStep] = useState(0);
+  // Step 0: original, 1: fallback AI prompt, 2: static placeholder
+  let imgSrc = image;
+  if (imgStep === 1 && image && image.includes('image.pollinations.ai')) {
+    // fallback: use a generic prompt for higher success
+    imgSrc = 'https://image.pollinations.ai/prompt/cartoon-animal?width=200&height=200';
+  } else if (imgStep === 2) {
+    imgSrc = '/ai-image-placeholder.png';
+  }
+
+  const handleImgError = () => {
+    setImgStep((prev) => (prev < 2 ? prev + 1 : 2));
+  };
 
   const handleClick = () => {
     setIsClicked(true);
@@ -55,13 +71,14 @@ const InteractiveCharacter: React.FC<InteractiveCharacterProps> = ({
         }
       `}>
         {image ? (
-          <img 
-            src={image} 
+          <img
+            src={imgSrc}
             alt={name}
             className="w-full h-full object-cover rounded-2xl group-hover:scale-105 transition-transform duration-300"
+            onError={handleImgError}
           />
         ) : (
-          <div className="text-6xl">{emoji}</div>
+          <div className="text-6xl">{emoji || '❓'}</div>
         )}
       </div>
       <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 

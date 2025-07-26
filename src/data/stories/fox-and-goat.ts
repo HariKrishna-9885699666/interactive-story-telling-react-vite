@@ -11,7 +11,7 @@ const foxAndGoat: StoryData = {
         title: "🦊 The Fox in the Well",
         subtitle: "Trouble Begins",
         story:
-          "A fox fell into a deep well and could not get out. He looked around for help, but there was no one nearby.",
+          "One day, a fox fell into a deep well and could not get out. He looked around for help, but there was no one nearby.",
         backgroundImage:
           "https://image.pollinations.ai/prompt/cartoon-style-fox-trapped-inside-stone-well-looking-up-worried-expression-light-from-above?width=1920&height=1080",
         backgroundClass:

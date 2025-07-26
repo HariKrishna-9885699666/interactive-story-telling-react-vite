@@ -11,7 +11,7 @@ const crowAndPitcher: StoryData = {
       title: "🐦 Thirsty Crow",
       subtitle: "No Water",
       story:
-        "A thirsty crow found a pitcher with a little water in it. But his beak couldn’t reach.",
+        "One hot day, a thirsty crow found a pitcher with a little water in it. But his beak couldn’t reach.",
       backgroundImage:
         "https://image.pollinations.ai/prompt/cartoon-crow-standing-by-tall-pitcher-looking-in-dry-garden-hot-day?width=1920&height=1080",
       backgroundClass:

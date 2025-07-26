@@ -11,7 +11,7 @@ const greedyBear: StoryData = {
       title: "🍯 Finding Honey",
       subtitle: "A sweet discovery",
       story:
-        'A bear found a jar of honey. He licked it and said, "I want more!"',
+        'One day, a bear found a jar of honey. He licked it and said, "I want more!"',
       backgroundImage:
         "https://image.pollinations.ai/prompt/cartoon-brown-bear-discovering-large-honey-jar-in-forest-clearing-excited-happy-expression-golden-honey-visible?width=1920&height=1080",
       backgroundClass:

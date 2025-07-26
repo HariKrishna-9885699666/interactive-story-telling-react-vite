@@ -11,7 +11,7 @@ const tortoiseHare: StoryData = {
       title: "🐰 The Fast Hare",
       subtitle: "Proud of his speed",
       story:
-        'The hare ran fast. The tortoise walked slowly. The hare laughed, "You are too slow!" The tortoise said, "Let\'s race!"',
+        'One day, the hare ran fast. The tortoise walked slowly. The hare laughed, "You are too slow!" The tortoise said, "Let\'s race!"',
       backgroundImage:
         "https://image.pollinations.ai/prompt/cartoon-brown-rabbit-running-very-fast-with-motion-blur-lines-next-to-slow-green-tortoise-walking-peacefully-in-sunny-meadow?width=1920&height=1080",
       backgroundClass:

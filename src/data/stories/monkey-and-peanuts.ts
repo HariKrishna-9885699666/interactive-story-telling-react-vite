@@ -11,7 +11,7 @@ const monkeyAndPeanuts: StoryData = {
       title: "🐒 The Monkey Finds Peanuts",
       subtitle: "A Tasty Surprise",
       story:
-        "A monkey found a bag full of peanuts. He was so excited! He quickly reached in to grab as many as he could.",
+        "One day, a monkey found a bag full of peanuts. He was so excited! He quickly reached in to grab as many as he could.",
       backgroundImage:
         "https://image.pollinations.ai/prompt/cartoon-monkey-in-jungle-finding-bag-of-peanuts-looking-excited-holding-bag-colorful-nature-scene?width=1920&height=1080",
       backgroundClass:

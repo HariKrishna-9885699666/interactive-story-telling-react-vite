@@ -11,7 +11,7 @@ const dogAndReflection: StoryData = {
       title: "🐶 Dog Finds a Bone",
       subtitle: "A Lucky Find",
       story:
-        "A dog found a big, tasty bone. He carried it proudly across a bridge over a stream.",
+        "One day, a dog found a big, tasty bone. He carried it proudly across a bridge over a stream.",
       backgroundImage:
         "https://image.pollinations.ai/prompt/cartoon-dog-walking-on-wooden-bridge-holding-bone-in-mouth-stream-in-background?width=1920&height=1080",
       backgroundClass:

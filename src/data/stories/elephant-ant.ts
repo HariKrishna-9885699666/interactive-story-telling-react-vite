@@ -11,7 +11,7 @@ const elephantAnt: StoryData = {
       title: "🐘 The Proud Elephant",
       subtitle: "Big and mighty, but not kind",
       story:
-        "An elephant was big and proud. He walked in the forest, kicking small animals.",
+        "One day, an elephant was big and proud. He walked in the forest, kicking small animals.",
       backgroundImage:
         "https://image.pollinations.ai/prompt/large-gray-cartoon-elephant-walking-proudly-through-dense-green-forest-with-small-animals-running-away-scared-arrogant-expression-sunlight-filtering-through-trees?width=1920&height=1080",
       backgroundClass:

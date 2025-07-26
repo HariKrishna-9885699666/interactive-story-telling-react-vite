@@ -11,7 +11,7 @@ const wiseFish: StoryData = {
       title: "🐟 The Wise Little Fish",
       subtitle: "Three Friends in a Sparkling Lake",
       story:
-        "In a quiet, sparkling lake lived three fish—Speedy, Sleepy, and Smarty. They were best friends but very different. Speedy loved to swim fast, Sleepy always napped, and Smarty loved to think ahead.",
+        "Once upon a time, in a quiet, sparkling lake lived three fish—Speedy, Sleepy, and Smarty. They were best friends but very different. Speedy loved to swim fast, Sleepy always napped, and Smarty loved to think ahead.",
       backgroundImage:
         "https://image.pollinations.ai/prompt/underwater-view-of-crystal-clear-sparkling-lake-with-sunlight-filtering-through-water-creating-beautiful-light-rays-peaceful-aquatic-environment-with-water-plants-and-rocks-photorealistic-style?width=1920&height=1080",
       backgroundClass:

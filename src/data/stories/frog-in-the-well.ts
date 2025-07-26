@@ -11,7 +11,7 @@ const frogInTheWell: StoryData = {
       title: "🐸 The Frog in the Well",
       subtitle: "A Small Frog's World",
       story:
-        "A small frog lived in a deep, dark well. He thought the well was the whole world. He had never seen anything beyond it.",
+        "Once upon a time, a small frog lived in a deep, dark well. He thought the well was the whole world. He had never seen anything beyond it.",
       backgroundImage:
         "https://image.pollinations.ai/prompt/inside-view-of-old-deep-stone-well-dark-moist-stone-walls-light-shining-from-above-frog-at-bottom-photorealistic-style?width=1920&height=1080",
       backgroundClass:

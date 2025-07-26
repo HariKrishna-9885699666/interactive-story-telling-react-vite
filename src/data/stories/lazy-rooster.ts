@@ -11,7 +11,7 @@ const lazyRooster: StoryData = {
         title: "🐓 The Lazy Rooster",
         subtitle: "Too Tired to Wake",
         story:
-          "There was a lazy rooster who never woke up early. He liked to sleep while others started their day.",
+          "Once upon a time, there was a lazy rooster who never woke up early. He liked to sleep while others started their day.",
         backgroundImage:
           "https://image.pollinations.ai/prompt/cartoon-rooster-sleeping-on-hay-bale-as-sun-rises-in-background-other-animals-active-farm-scene?width=1920&height=1080",
         backgroundClass:

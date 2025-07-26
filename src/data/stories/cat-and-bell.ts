@@ -11,7 +11,7 @@ const catAndBell: StoryData = {
       title: "🐭 The Mice Are Afraid",
       subtitle: "Fear of the Cat",
       story:
-        "The mice were very scared of the cat. Whenever the cat came, they ran in all directions.",
+        "One day, the mice were very scared of the cat. Whenever the cat came, they ran in all directions.",
       backgroundImage:
         "https://image.pollinations.ai/prompt/cartoon-cat-sneaking-around-corner-mice-looking-scared-in-hole-warm-farmhouse-setting?width=1920&height=1080",
       backgroundClass:
