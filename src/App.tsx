@@ -322,7 +322,7 @@ function App() {
           </div>
 
           {/* Voice Indicator */}
-          <VoiceIndicator isActive={isSpeaking} message={narrationMessage} />
+          {/* <VoiceIndicator isActive={isSpeaking} message={narrationMessage} /> */}
 
           {/* Sparkle Effects Container */}
           <div id="sparkles-container" className="fixed inset-0 pointer-events-none z-30" />
