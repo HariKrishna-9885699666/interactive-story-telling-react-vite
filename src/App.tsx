@@ -212,7 +212,10 @@ function App() {
       {/* Story Selection Overlay */}
       {!isLoading && !selectedStoryId && (
         <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/90 px-2">
-          <h1 className="text-3xl sm:text-4xl md:text-6xl font-black text-white mb-8 drop-shadow-lg text-center">Select a Story</h1>
+          <h1 className="text-3xl sm:text-4xl md:text-6xl font-black text-white mb-4 drop-shadow-lg text-center">
+            Discover a Magical Story
+            <span className="block w-24 h-1 mx-auto mt-4 bg-gradient-to-r from-yellow-400 via-pink-400 to-blue-400 rounded-full"></span>
+          </h1>
           <div className="w-full max-w-5xl flex-1 overflow-y-auto">
             <div className="grid grid-cols-3 gap-3 sm:gap-6 md:gap-8 justify-center">
               {stories.map(story => (
