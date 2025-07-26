@@ -88,7 +88,7 @@ export const useVoiceNarration = () => {
               return -1;
             }
           });
-        }, 200); // Adjusted speed for better sync
+        }, 450); // Adjusted speed for better sync
       };
 
       utterance.onboundary = (event) => {
