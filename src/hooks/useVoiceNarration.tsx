@@ -28,121 +28,124 @@ export const useVoiceNarration = () => {
     return () => speechSynthesis.removeEventListener('voiceschanged', loadVoices);
   }, []);
 
-  // Speak with word highlighting (syncs with voice)
+  // Speak with word highlighting (syncs with voice, fallback for mobile)
   const speakNarration = useCallback((text: string, onWordHighlight?: (wordIndex: number) => void) => {
-    // First, cancel any ongoing speech synthesis
     speechSynthesis.cancel();
-    
-    // Reset all state variables
     setIsSpeaking(false);
     setIsPaused(false);
     setCurrentWordIndex(-1);
-    
-    // Return early if narration is disabled or muted or text is empty
     if (!isEnabled || isMuted || !text.trim()) return;
 
-    // Add a small delay before starting new narration to ensure previous one is fully stopped
     setTimeout(() => {
-      // Process text into words with better tokenization
-      // This regex splits text into words while preserving punctuation with the words
-      // We're using a more sophisticated regex to handle various word boundaries and punctuation
       const words = text.match(/[\w']+(?:[.,!?;:])?/g) || [];
       wordsRef.current = words;
       onWordHighlightRef.current = onWordHighlight;
 
-    // Create a more accurate mapping of character positions to word indices
-    const charToWordMap = new Map<number, number>();
-    
-    // Find all word positions in the original text
-    let lastIndex = 0;
-    const wordPositions: {word: string; startIndex: number; endIndex: number; wordIndex: number}[] = [];
-    
-    for (let i = 0; i < words.length; i++) {
-      const word = words[i];
-      const startIndex = text.indexOf(word, lastIndex);
-      if (startIndex !== -1) {
-        const endIndex = startIndex + word.length;
-        wordPositions.push({ word, startIndex, endIndex, wordIndex: i });
-        lastIndex = endIndex;
-      }
-    }
-    
-    // Map each character position to its corresponding word index
-    for (let i = 0; i < text.length; i++) {
-      const wordPosition = wordPositions.find(pos => i >= pos.startIndex && i < pos.endIndex);
-      if (wordPosition) {
-        charToWordMap.set(i, wordPosition.wordIndex);
-      }
-    }
+      // --- Fallback timer for mobile ---
+      let fallbackTimer: number | null = null;
+      let fallbackIndex = 0;
+      let boundaryFired = false;
 
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = 0.8;
-    utterance.pitch = 1.1;
-    utterance.volume = 0.9;
-    if (selectedVoice) utterance.voice = selectedVoice;
-    utteranceRef.current = utterance;
+      // Create a more accurate mapping of character positions to word indices
+      const charToWordMap = new Map<number, number>();
+      let lastIndex = 0;
+      const wordPositions: {word: string; startIndex: number; endIndex: number; wordIndex: number}[] = [];
+      for (let i = 0; i < words.length; i++) {
+        const word = words[i];
+        const startIndex = text.indexOf(word, lastIndex);
+        if (startIndex !== -1) {
+          const endIndex = startIndex + word.length;
+          wordPositions.push({ word, startIndex, endIndex, wordIndex: i });
+          lastIndex = endIndex;
+        }
+      }
+      for (let i = 0; i < text.length; i++) {
+        const wordPosition = wordPositions.find(pos => i >= pos.startIndex && i < pos.endIndex);
+        if (wordPosition) {
+          charToWordMap.set(i, wordPosition.wordIndex);
+        }
+      }
 
-    utterance.onboundary = (event) => {
-      if (event.name === 'word') {
-        // Get the character index from the speech event
-        const charIndex = event.charIndex;
-        
-        // Find the closest word index for this character position
-        let wordIndex = -1;
-        
-        // Try exact match first
-        if (charToWordMap.has(charIndex)) {
-          wordIndex = charToWordMap.get(charIndex) || -1;
-        } else {
-          // If no exact match, find the closest word by searching nearby positions
-          for (let i = 1; i <= 5; i++) {
-            if (charToWordMap.has(charIndex - i)) {
-              wordIndex = charToWordMap.get(charIndex - i) || -1;
-              break;
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 0.8;
+      utterance.pitch = 1.1;
+      utterance.volume = 0.9;
+      if (selectedVoice) utterance.voice = selectedVoice;
+      utteranceRef.current = utterance;
+
+      // Fallback: If onboundary doesn't fire, use timer
+      const startFallback = () => {
+        if (fallbackTimer) clearInterval(fallbackTimer);
+        fallbackIndex = 0;
+        fallbackTimer = window.setInterval(() => {
+          setCurrentWordIndex(idx => {
+            const nextIdx = idx < 0 ? 0 : idx + 1;
+            if (nextIdx < words.length) {
+              onWordHighlight?.(nextIdx);
+              return nextIdx;
+            } else {
+              if (fallbackTimer) clearInterval(fallbackTimer);
+              return -1;
             }
-            if (charToWordMap.has(charIndex + i)) {
-              wordIndex = charToWordMap.get(charIndex + i) || -1;
-              break;
+          });
+        }, 350); // Adjust speed as needed
+      };
+
+      utterance.onboundary = (event) => {
+        if (event.name === 'word') {
+          boundaryFired = true;
+          if (fallbackTimer) clearInterval(fallbackTimer);
+          const charIndex = event.charIndex;
+          let wordIndex = -1;
+          if (charToWordMap.has(charIndex)) {
+            wordIndex = charToWordMap.get(charIndex) || -1;
+          } else {
+            for (let i = 1; i <= 5; i++) {
+              if (charToWordMap.has(charIndex - i)) {
+                wordIndex = charToWordMap.get(charIndex - i) || -1;
+                break;
+              }
+              if (charToWordMap.has(charIndex + i)) {
+                wordIndex = charToWordMap.get(charIndex + i) || -1;
+                break;
+              }
             }
           }
+          if (wordIndex >= 0 && wordIndex < words.length) {
+            setCurrentWordIndex(wordIndex);
+            onWordHighlight?.(wordIndex);
+          }
         }
-        
-        // Ensure we don't go out of bounds and we have a valid word index
-        if (wordIndex >= 0 && wordIndex < words.length) {
-          setCurrentWordIndex(wordIndex);
-          onWordHighlight?.(wordIndex);
-        }
-      }
-    };
+      };
 
-    utterance.onstart = () => {
-      console.log('Speech started');
-      setIsSpeaking(true);
-      // Initialize with the first word after a small delay to ensure synchronization
-      // Use a slightly longer delay to ensure text is fully visible before highlighting begins
+      utterance.onstart = () => {
+        setIsSpeaking(true);
+        setTimeout(() => {
+          setCurrentWordIndex(0);
+          onWordHighlight?.(0);
+          // If onboundary doesn't fire in 500ms, start fallback
+          setTimeout(() => {
+            if (!boundaryFired) startFallback();
+          }, 500);
+        }, 200);
+      };
+      utterance.onend = () => {
+        setIsSpeaking(false);
+        setIsPaused(false);
+        setCurrentWordIndex(-1);
+        if (fallbackTimer) clearInterval(fallbackTimer);
+      };
+      utterance.onerror = () => {
+        setIsSpeaking(false);
+        setIsPaused(false);
+        setCurrentWordIndex(-1);
+        if (fallbackTimer) clearInterval(fallbackTimer);
+      };
+
       setTimeout(() => {
-        setCurrentWordIndex(0);
-        onWordHighlight?.(0);
-      }, 200);
-    };
-    utterance.onend = () => {
-      console.log('Speech ended');
-      setIsSpeaking(false);
-      setIsPaused(false);
-      setCurrentWordIndex(-1);
-    };
-    utterance.onerror = () => {
-      setIsSpeaking(false);
-      setIsPaused(false);
-      setCurrentWordIndex(-1);
-    };
-
-    // Add a small delay before starting speech synthesis to ensure UI is ready
-    setTimeout(() => {
-      console.log('Speaking utterance');
-      speechSynthesis.speak(utterance);
-    }, 300);
-  }, 100); // Delay the entire speech process to ensure previous speech is fully canceled
+        speechSynthesis.speak(utterance);
+      }, 300);
+    }, 100);
   }, [isEnabled, isMuted, selectedVoice]);
 
   const stop = useCallback(() => {
