@@ -190,9 +190,20 @@ function App() {
     <div className="min-h-screen bg-black overflow-hidden relative text-base sm:text-lg">
       {/* Fullscreen background image */}
       {currentBgImage && (
-        <div
-          className="fixed inset-0 w-full h-full bg-cover bg-center z-0"
-          style={{ backgroundImage: `url(${currentBgImage})` }}
+        <img
+          src={currentBgImage}
+          alt="Background"
+          className="fixed inset-0 w-full h-full object-contain z-0 pointer-events-none select-none"
+          style={{
+            objectFit: 'contain',
+            width: '100vw',
+            height: '100vh',
+            left: 0,
+            top: 0,
+            position: 'fixed',
+            zIndex: 0
+          }}
+          draggable={false}
         />
       )}
 
