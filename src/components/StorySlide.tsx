@@ -96,20 +96,23 @@ const StorySlide: React.FC<StorySlideProps> = ({
   };
 
   return (
+
     <div className="relative w-full h-full flex flex-col items-center justify-center px-2 sm:px-6 py-4 sm:py-8">
         <h1 className={`
-          text-2xl sm:text-4xl md:text-6xl font-black text-white text-center mb-4 sm:mb-6
+          text-2xl sm:text-4xl md:text-6xl font-black text-center mb-4 sm:mb-6
+          font-title-interactive drop-shadow-lg animate-bounce-slow
           transition-all duration-1000 ease-out
           ${showTitle ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 -translate-y-12 scale-90'}
-        `} style={{ textShadow: '4px 4px 8px rgba(0,0,0,0.8)' }}>
+        `}>
           {title}
         </h1>
 
         <p className={`
-          text-base sm:text-xl md:text-2xl text-white/90 text-center mb-6 sm:mb-12
+          text-base sm:text-xl md:text-2xl text-center mb-6 sm:mb-12
+          font-subtitle-interactive animate-fade-in
           transition-all duration-1000 ease-out delay-300
           ${showSubtitle ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}
-        `} style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.8)' }}>
+        `}>
           {subtitle}
         </p>
 

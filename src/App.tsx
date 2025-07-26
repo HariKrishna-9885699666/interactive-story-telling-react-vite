@@ -193,7 +193,7 @@ function App() {
       {/* Story Selection Overlay */}
       {!isLoading && !selectedStoryId && (
         <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/90 px-2">
-          <h1 className="text-3xl sm:text-4xl md:text-6xl font-black text-white mb-8 drop-shadow-lg text-center">Select a Story</h1>
+          <h1 className="text-3xl sm:text-4xl md:text-6xl font-black mb-8 drop-shadow-lg text-center font-title-interactive animate-bounce-slow">Select a Story</h1>
           <div className="w-full max-w-5xl flex-1 overflow-y-auto">
             <div className="grid grid-cols-3 gap-3 sm:gap-6 md:gap-8 justify-center">
               {stories.map(story => (
@@ -203,7 +203,7 @@ function App() {
                   onClick={() => setSelectedStoryId(story.id)}
                 >
                   <img src={story.coverImage} alt={story.title} className="w-full h-24 sm:h-32 object-cover rounded-xl mb-2 sm:mb-3" />
-                  <span className="text-xs sm:text-lg font-bold text-white mb-1 sm:mb-2 drop-shadow text-center">{story.title}</span>
+                  <span className="text-xs sm:text-lg font-bold mb-1 sm:mb-2 drop-shadow text-center font-title-interactive">{story.title}</span>
                 </button>
               ))}
             </div>
@@ -215,7 +215,7 @@ function App() {
       {/* Start Story Overlay */}
       {!isLoading && selectedStoryId && showStart && (
         <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/80 px-4">
-          <h1 className="text-3xl sm:text-4xl md:text-6xl font-black text-white mb-8 drop-shadow-lg text-center">{selectedStory.title}</h1>
+          <h1 className="text-3xl sm:text-4xl md:text-6xl font-black mb-8 drop-shadow-lg text-center font-title-interactive animate-bounce-slow">{selectedStory.title}</h1>
           <button
             className="px-6 sm:px-8 py-3 sm:py-4 bg-cyan-500 hover:bg-cyan-600 text-white text-xl sm:text-2xl font-bold rounded-2xl shadow-lg transition-all duration-300"
             onClick={() => {

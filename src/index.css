@@ -1,3 +1,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Add playful, interactive font for story titles */
+@import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Fredoka+One&display=swap');
+
+.font-title-interactive {
+  font-family: 'Luckiest Guy', 'Fredoka One', cursive, sans-serif;
+  letter-spacing: 0.04em;
+  text-shadow: 0 4px 16px rgba(0,0,0,0.25), 0 1px 0 #fff;
+  color: #fff;
+}
+
+.font-subtitle-interactive {
+  font-family: 'Fredoka One', 'Luckiest Guy', cursive, sans-serif;
+  letter-spacing: 0.02em;
+  color: #fffbe7;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.18);
+}
