@@ -1513,4 +1513,601 @@ export const stories: StoryData[] = [
       },
     ],
   },
+  {
+    id: "fox-and-grapes",
+    title: "The Fox and the Grapes",
+    coverImage:
+      "https://image.pollinations.ai/prompt/cute-cartoon-fox-looking-up-at-bunch-of-grapes-hanging-above-beyond-reach-vivid-forest?width=600&height=400",
+    slides: [
+      {
+        id: 0,
+        title: "🦊 Fox Spots Juicy Grapes",
+        subtitle: "Out of Reach",
+        story:
+          "A hungry fox saw some juicy grapes hanging high on a vine. He wanted them very much.",
+        backgroundImage:
+          "https://image.pollinations.ai/prompt/cartoon-fox-in-forest-looking-up-longing-at-cluster-of-grapes-on-high-vine-colorful?width=1920&height=1080",
+        backgroundClass:
+          "bg-gradient-to-br from-green-500/70 via-teal-400/70 to-emerald-800/70",
+        characters: [
+          {
+            image:
+              "https://image.pollinations.ai/prompt/cute-cartoon-fox-looking-hopeful-standing-below-grapes-in-forest?width=200&height=200",
+            name: "Eager Fox",
+            position: { left: "45%", top: "55%" },
+            delay: 600,
+          },
+          {
+            emoji: "🍇",
+            name: "Grapes",
+            position: { left: "50%", top: "25%" },
+            delay: 900,
+          },
+        ],
+      },
+      {
+        id: 1,
+        title: "🦊 Jumps and Misses",
+        subtitle: "Try and Try",
+        story:
+          "He jumped high, again and again. But the grapes were too high! He couldn’t get them.",
+        backgroundImage:
+          "https://image.pollinations.ai/prompt/cartoon-fox-leaping-repeatedly-towards-high-grapes-looking-frustrated-forest-scene?width=1920&height=1080",
+        backgroundClass:
+          "bg-gradient-to-br from-blue-400/70 via-green-300/70 to-blue-800/70",
+        characters: [
+          {
+            image:
+              "https://image.pollinations.ai/prompt/cartoon-fox-in-air-trying-to-catch-grapes-tongue-out-funny-frustrated?width=200&height=200",
+            name: "Frustrated Fox",
+            position: { left: "47%", top: "50%" },
+            delay: 600,
+          },
+        ],
+      },
+      {
+        id: 2,
+        title: "😤 Gives Up",
+        subtitle: "Sour Grapes",
+        story:
+          "The fox finally gave up. He walked away, saying 'I bet those grapes are sour anyway!'",
+        backgroundImage:
+          "https://image.pollinations.ai/prompt/cartoon-fox-walking-away-looking-back-disappointed-thought-bubble-sour-grapes-forest?width=1920&height=1080",
+        backgroundClass:
+          "bg-gradient-to-br from-purple-400/70 via-blue-300/70 to-blue-900/70",
+        characters: [
+          {
+            image:
+              "https://image.pollinations.ai/prompt/cartoon-fox-looking-back-over-shoulder-grumpy-thought-bubble-grapes-sour?width=200&height=200",
+            name: "Grumpy Fox",
+            position: { left: "53%", top: "48%" },
+            delay: 650,
+          },
+        ],
+      },
+      {
+        id: 3,
+        title: "🍇 Still Hanging Grapes",
+        subtitle: "Out of Reach",
+        story:
+          "The grapes stayed on the vine, waiting for someone patient or tall enough to reach them.",
+        backgroundImage:
+          "https://image.pollinations.ai/prompt/cartoon-grapes-hanging-from-vine-high-above-ground-fox-in-distance-forest-scene?width=1920&height=1080",
+        backgroundClass:
+          "bg-gradient-to-br from-lime-400/70 via-green-200/70 to-purple-400/70",
+        characters: [
+          {
+            emoji: "🍇",
+            name: "Grapes",
+            position: { left: "55%", top: "30%" },
+            delay: 700,
+          },
+        ],
+      },
+      {
+        id: 4,
+        title: "🌟 Moral",
+        subtitle: "Don't Be a Sore Loser",
+        story: "Moral: It’s easy to despise what you cannot have.",
+        backgroundImage:
+          "https://image.pollinations.ai/prompt/cartoon-fox-sitting-disappointed-thinking-about-grapes-learned-lesson-sunset-forest?width=1920&height=1080",
+        backgroundClass:
+          "bg-gradient-to-br from-yellow-200/70 via-orange-200/70 to-purple-200/70",
+        characters: [
+          {
+            image:
+              "https://image.pollinations.ai/prompt/cartoon-fox-sitting-alone-thinking-about-sour-grapes-lesson-sunset-forest?width=200&height=200",
+            name: "Thoughtful Fox",
+            position: { left: "40%", top: "50%" },
+            delay: 550,
+          },
+          {
+            emoji: "🌟",
+            name: "Moral",
+            position: { left: "65%", top: "25%" },
+            delay: 1200,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "lion-and-mouse",
+    title: "The Lion and the Mouse",
+    coverImage:
+      "https://image.pollinations.ai/prompt/cartoon-lion-lying-down-looking-curious-as-small-mouse-approaches-jungle-clearing-bright-fun-style?width=600&height=400",
+    slides: [
+      {
+        id: 0,
+        title: "🦁 Sleeping Lion",
+        subtitle: "Unexpected Visitor",
+        story:
+          "A mighty lion was sleeping in the sun. A little mouse ran across his paw, waking him up.",
+        backgroundImage:
+          "https://image.pollinations.ai/prompt/cartoon-lion-asleep-in-jungle-mouse-tiptoes-over-paw-colorful-sunny-scene?width=1920&height=1080",
+        backgroundClass:
+          "bg-gradient-to-br from-yellow-400/70 via-orange-300/70 to-red-500/70",
+        characters: [
+          {
+            image:
+              "https://image.pollinations.ai/prompt/cute-cartoon-lion-sleeping-head-on-paw-jungle?width=200&height=200",
+            name: "Lion",
+            position: { left: "52%", top: "53%" },
+            delay: 600,
+          },
+          {
+            image:
+              "https://image.pollinations.ai/prompt/cute-cartoon-mouse-scurrying-over-lions-paw-jungle?width=200&height=200",
+            name: "Mouse",
+            position: { left: "57%", top: "65%" },
+            delay: 900,
+          },
+        ],
+      },
+      {
+        id: 1,
+        title: "😱 Lion’s Roar",
+        subtitle: "Mouse Begs",
+        story:
+          "The lion caught the mouse! The mouse begged for mercy, promising to help someday.",
+        backgroundImage:
+          "https://image.pollinations.ai/prompt/cartoon-lion-roaring-mouse-trapped-under-paw-scared-expression-jungle-scene?width=1920&height=1080",
+        backgroundClass:
+          "bg-gradient-to-br from-red-600/70 via-orange-300/70 to-red-300/70",
+        characters: [
+          {
+            image:
+              "https://image.pollinations.ai/prompt/cartoon-lion-roaring-mouse-under-paw-mouse-looking-frightened?width=200&height=200",
+            name: "Scared Mouse",
+            position: { left: "54%", top: "61%" },
+            delay: 700,
+          },
+        ],
+      },
+      {
+        id: 2,
+        title: "😊 Lion Lets Go",
+        subtitle: "Kindness",
+        story:
+          "The lion laughed but let the mouse go. The mouse ran away, grateful for the lion’s mercy.",
+        backgroundImage:
+          "https://image.pollinations.ai/prompt/cartoon-lion-smiling-releasing-mouse-open-paw-happy-mouse-jungle?width=1920&height=1080",
+        backgroundClass:
+          "bg-gradient-to-br from-yellow-200/70 via-green-200/70 to-orange-200/70",
+        characters: [
+          {
+            image:
+              "https://image.pollinations.ai/prompt/cartoon-lion-smiling-open-paw-mouse-on-ground-waving-thankful?width=200&height=200",
+            name: "Relieved Mouse",
+            position: { left: "56%", top: "61%" },
+            delay: 650,
+          },
+        ],
+      },
+      {
+        id: 3,
+        title: "🪢 Lion in Trouble",
+        subtitle: "Mouse Helps",
+        story:
+          "Later, hunters trapped the lion in a net. The mouse gnawed the ropes and freed the lion.",
+        backgroundImage:
+          "https://image.pollinations.ai/prompt/cartoon-lion-caught-in-rope-net-mouse-chewing-through-to-free-lion-bright-jungle?width=1920&height=1080",
+        backgroundClass:
+          "bg-gradient-to-br from-teal-400/70 via-yellow-100/70 to-green-300/70",
+        characters: [
+          {
+            image:
+              "https://image.pollinations.ai/prompt/cartoon-mouse-gnawing-through-net-lion-smiling-relieved-inside-jungle?width=200&height=200",
+            name: "Helpful Mouse",
+            position: { left: "60%", top: "58%" },
+            delay: 700,
+          },
+          {
+            image:
+              "https://image.pollinations.ai/prompt/cute-cartoon-lion-smiling-excitedly-freed-from-net-jungle?width=200&height=200",
+            name: "Happy Lion",
+            position: { left: "45%", top: "56%" },
+            delay: 900,
+          },
+        ],
+      },
+      {
+        id: 4,
+        title: "🌟 Moral",
+        subtitle: "Kindness is Rewarded",
+        story:
+          "Moral: No act of kindness, no matter how small, is ever wasted.",
+        backgroundImage:
+          "https://image.pollinations.ai/prompt/cartoon-lion-and-mouse-sitting-together-smiling-friends-jungle-sunset?width=1920&height=1080",
+        backgroundClass:
+          "bg-gradient-to-br from-yellow-300/70 via-orange-200/70 to-green-400/70",
+        characters: [
+          {
+            image:
+              "https://image.pollinations.ai/prompt/cartoon-lion-and-mouse-sitting-side-by-side-friendship-jungle?width=200&height=200",
+            name: "Friends",
+            position: { left: "47%", top: "54%" },
+            delay: 700,
+          },
+          {
+            emoji: "🌟",
+            name: "Moral",
+            position: { left: "66%", top: "27%" },
+            delay: 1000,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "dog-and-reflection",
+    title: "The Dog and His Reflection",
+    coverImage:
+      "https://image.pollinations.ai/prompt/funny-cartoon-dog-walking-with-bone-in-mouth-crossing-bridge-sees-own-reflection-in-water-daylight?width=600&height=400",
+    slides: [
+      {
+        id: 0,
+        title: "🐶 Dog Finds a Bone",
+        subtitle: "A Lucky Find",
+        story:
+          "A dog found a big, tasty bone. He carried it proudly across a bridge over a stream.",
+        backgroundImage:
+          "https://image.pollinations.ai/prompt/cartoon-dog-walking-on-wooden-bridge-holding-bone-in-mouth-stream-in-background?width=1920&height=1080",
+        backgroundClass:
+          "bg-gradient-to-br from-brown-300/70 via-tan-200/70 to-blue-400/70",
+        characters: [
+          {
+            image:
+              "https://image.pollinations.ai/prompt/cartoon-dog-smiling-carrying-large-bone-in-mouth-bridge?width=200&height=200",
+            name: "Proud Dog",
+            position: { left: "53%", top: "56%" },
+            delay: 700,
+          },
+          {
+            emoji: "🦴",
+            name: "Bone",
+            position: { left: "44%", top: "40%" },
+            delay: 900,
+          },
+        ],
+      },
+      {
+        id: 1,
+        title: "🌊 Sees Another Dog",
+        subtitle: "Reflection",
+        story:
+          "He looked into the water and saw his reflection, but thought it was another dog with another bone.",
+        backgroundImage:
+          "https://image.pollinations.ai/prompt/cartoon-dog-looking-in-water-seeing-own-reflection-bone-in-both-mouths-bridge?width=1920&height=1080",
+        backgroundClass:
+          "bg-gradient-to-br from-blue-200/70 via-tan-300/70 to-brown-300/70",
+        characters: [
+          {
+            image:
+              "https://image.pollinations.ai/prompt/cartoon-dog-looking-down-at-own-reflection-in-stream-confused-bone-in-mouth?width=200&height=200",
+            name: "Confused Dog",
+            position: { left: "51%", top: "53%" },
+            delay: 750,
+          },
+        ],
+      },
+      {
+        id: 2,
+        title: "😱 Drops the Bone",
+        subtitle: "Greedy Mistake",
+        story:
+          "The greedy dog barked at the 'other dog' to grab his bone too. His bone fell into the water!",
+        backgroundImage:
+          "https://image.pollinations.ai/prompt/cartoon-dog-barking-at-water-bone-slipping-from-mouth-splash-bridge-scene?width=1920&height=1080",
+        backgroundClass:
+          "bg-gradient-to-br from-blue-500/70 via-brown-300/70 to-blue-700/70",
+        characters: [
+          {
+            image:
+              "https://image.pollinations.ai/prompt/cartoon-dog-shocked-bone-falling-into-water-bridge?width=200&height=200",
+            name: "Shocked Dog",
+            position: { left: "52%", top: "56%" },
+            delay: 700,
+          },
+        ],
+      },
+      {
+        id: 3,
+        title: "💧 Bone Lost",
+        subtitle: "Empty Mouth",
+        story:
+          "He lost his bone. Now he had nothing! The stream carried it away.",
+        backgroundImage:
+          "https://image.pollinations.ai/prompt/cartoon-dog-looking-sad-bone-floating-away-in-water-under-bridge?width=1920&height=1080",
+        backgroundClass:
+          "bg-gradient-to-br from-blue-300/70 via-gray-200/70 to-brown-200/70",
+        characters: [
+          {
+            image:
+              "https://image.pollinations.ai/prompt/cartoon-dog-sitting-on-bridge-sadly-watching-bone-float-away-water?width=200&height=200",
+            name: "Sad Dog",
+            position: { left: "53%", top: "56%" },
+            delay: 800,
+          },
+        ],
+      },
+      {
+        id: 4,
+        title: "🌟 Moral",
+        subtitle: "Greed Loses All",
+        story: "Moral: Don’t be greedy; you may lose what you have.",
+        backgroundImage:
+          "https://image.pollinations.ai/prompt/cartoon-dog-sitting-alone-bridge-thinking-about-lost-bone-moral-sunset?width=1920&height=1080",
+        backgroundClass:
+          "bg-gradient-to-br from-yellow-300/70 via-brown-200/70 to-blue-200/70",
+        characters: [
+          {
+            image:
+              "https://image.pollinations.ai/prompt/cartoon-dog-looking-thoughtful-on-bridge-thinking-about-greed-lost-bone-sunset?width=200&height=200",
+            name: "Wise Dog",
+            position: { left: "42%", top: "57%" },
+            delay: 600,
+          },
+          {
+            emoji: "🌟",
+            name: "Moral",
+            position: { left: "70%", top: "20%" },
+            delay: 1200,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "crow-and-pitcher",
+    title: "The Crow and the Pitcher",
+    coverImage:
+      "https://image.pollinations.ai/prompt/cartoon-crow-looking-at-pitcher-almost-empty-water-garden-clever-solution-fun-style?width=600&height=400",
+    slides: [
+      {
+        id: 0,
+        title: "🐦 Thirsty Crow",
+        subtitle: "No Water",
+        story:
+          "A thirsty crow found a pitcher with a little water in it. But his beak couldn’t reach.",
+        backgroundImage:
+          "https://image.pollinations.ai/prompt/cartoon-crow-standing-by-tall-pitcher-looking-in-dry-garden-hot-day?width=1920&height=1080",
+        backgroundClass:
+          "bg-gradient-to-br from-blue-400/70 via-gray-300/70 to-yellow-200/70",
+        characters: [
+          {
+            image:
+              "https://image.pollinations.ai/prompt/cartoon-crow-peering-into-tall-pitcher-empty-garden-thirsty?width=200&height=200",
+            name: "Crow",
+            position: { left: "43%", top: "45%" },
+            delay: 600,
+          },
+        ],
+      },
+      {
+        id: 1,
+        title: "💡 Clever Crow",
+        subtitle: "Idea",
+        story:
+          "He got an idea! The crow began dropping small stones into the pitcher.",
+        backgroundImage:
+          "https://image.pollinations.ai/prompt/cartoon-crow-dropping-pebbles-into-pitcher-closeup-intelligent-face?width=1920&height=1080",
+        backgroundClass:
+          "bg-gradient-to-br from-gray-200/70 via-green-100/70 to-brown-300/70",
+        characters: [
+          {
+            image:
+              "https://image.pollinations.ai/prompt/cartoon-crow-holding-pebble-in-beak-hovering-over-tall-pitcher-smiling?width=200&height=200",
+            name: "Smart Crow",
+            position: { left: "45%", top: "48%" },
+            delay: 640,
+          },
+        ],
+      },
+      {
+        id: 2,
+        title: "💧 Water Rises",
+        subtitle: "Success",
+        story:
+          "With each pebble, the water rose. Soon the crow could drink easily!",
+        backgroundImage:
+          "https://image.pollinations.ai/prompt/cartoon-pitcher-closeup-water-level-rising-crow-smiling-thirst-quenching?width=1920&height=1080",
+        backgroundClass:
+          "bg-gradient-to-br from-blue-200/70 via-green-200/70 to-brown-200/70",
+        characters: [
+          {
+            image:
+              "https://image.pollinations.ai/prompt/cartoon-crow-happy-drinking-water-from-tall-pitcher-crowd-by-side?width=200&height=200",
+            name: "Happy Crow",
+            position: { left: "45%", top: "45%" },
+            delay: 700,
+          },
+        ],
+      },
+      {
+        id: 3,
+        title: "😊 Satisfied Crow",
+        subtitle: "Well Done",
+        story: "The crow drank the cool water and flew away cheerfully.",
+        backgroundImage:
+          "https://image.pollinations.ai/prompt/cartoon-crow-flying-away-looking-happy-pitcher-empty-of-water-garden-scene?width=1920&height=1080",
+        backgroundClass:
+          "bg-gradient-to-br from-blue-300/70 via-green-200/70 to-yellow-100/70",
+        characters: [
+          {
+            image:
+              "https://image.pollinations.ai/prompt/cartoon-crow-flying-away-smiling-over-pitcher-clear-sky?width=200&height=200",
+            name: "Satisfied Crow",
+            position: { left: "48%", top: "40%" },
+            delay: 700,
+          },
+        ],
+      },
+      {
+        id: 4,
+        title: "🌟 Moral",
+        subtitle: "Work Smart",
+        story: "Moral: Where there’s a will, there’s a way.",
+        backgroundImage:
+          "https://image.pollinations.ai/prompt/cartoon-crow-looking-wise-sitting-on-branch-thinking-about-solution-moral-garden-sunset?width=1920&height=1080",
+        backgroundClass:
+          "bg-gradient-to-br from-yellow-200/70 via-gray-200/70 to-blue-300/70",
+        characters: [
+          {
+            image:
+              "https://image.pollinations.ai/prompt/cartoon-crow-sitting-on-tree-branch-looking-thoughtful-garden-sunset?width=200&height=200",
+            name: "Wise Crow",
+            position: { left: "35%", top: "52%" },
+            delay: 600,
+          },
+          {
+            emoji: "🌟",
+            name: "Moral",
+            position: { left: "70%", top: "25%" },
+            delay: 1200,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "ant-and-grasshopper",
+    title: "The Ant and the Grasshopper",
+    coverImage:
+      "https://image.pollinations.ai/prompt/cartoon-ant-carrying-grain-working-grasshopper-singing-relaxing-sunny-meadow-style?width=600&height=400",
+    slides: [
+      {
+        id: 0,
+        title: "🐜 Busy Ant",
+        subtitle: "Working Hard",
+        story:
+          "All summer, the ant worked hard gathering food for winter. The grasshopper sang and played.",
+        backgroundImage:
+          "https://image.pollinations.ai/prompt/cartoon-ant-carrying-heavy-grain-grasshopper-playing-fiddle-sunny-meadow?width=1920&height=1080",
+        backgroundClass:
+          "bg-gradient-to-br from-green-300/70 via-yellow-200/70 to-blue-300/70",
+        characters: [
+          {
+            image:
+              "https://image.pollinations.ai/prompt/cartoon-ant-carrying-seed-looking-focused-meadow?width=200&height=200",
+            name: "Ant",
+            position: { left: "45%", top: "56%" },
+            delay: 600,
+          },
+          {
+            image:
+              "https://image.pollinations.ai/prompt/cartoon-grasshopper-playing-music-chilling-in-grass-meadow-summer?width=200&height=200",
+            name: "Grasshopper",
+            position: { left: "55%", top: "56%" },
+            delay: 900,
+          },
+        ],
+      },
+      {
+        id: 1,
+        title: "❄ Winter Arrives",
+        subtitle: "No Food!",
+        story:
+          "Winter came. The ground was covered with snow. The grasshopper was hungry—he had nothing to eat.",
+        backgroundImage:
+          "https://image.pollinations.ai/prompt/cartoon-meadow-covered-in-snow-shivering-grasshopper-snowflakes-falling-cold-day?width=1920&height=1080",
+        backgroundClass:
+          "bg-gradient-to-br from-white/80 via-blue-300/70 to-gray-400/70",
+        characters: [
+          {
+            image:
+              "https://image.pollinations.ai/prompt/cartoon-grasshopper-shivering-looking-sad-winter-snow-meadow?width=200&height=200",
+            name: "Cold Grasshopper",
+            position: { left: "51%", top: "62%" },
+            delay: 700,
+          },
+        ],
+      },
+      {
+        id: 2,
+        title: "🐜 Ant’s Warm House",
+        subtitle: "Plenty to Eat",
+        story:
+          "The ant stayed warm and happy in his house with plenty of food.",
+        backgroundImage:
+          "https://image.pollinations.ai/prompt/cartoon-ant-in-cozy-house-eating-winter-food-happy-warm-decoration?width=1920&height=1080",
+        backgroundClass:
+          "bg-gradient-to-br from-orange-200/70 via-red-200/70 to-yellow-200/70",
+        characters: [
+          {
+            image:
+              "https://image.pollinations.ai/prompt/cartoon-ant-eating-smiling-warm-inside-house-winter-outside?width=200&height=200",
+            name: "Happy Ant",
+            position: { left: "48%", top: "48%" },
+            delay: 700,
+          },
+        ],
+      },
+      {
+        id: 3,
+        title: "🙇 Hungry Grasshopper",
+        subtitle: "Regret",
+        story:
+          "The grasshopper asked the ant for food, but the ant reminded him about not working when he could.",
+        backgroundImage:
+          "https://image.pollinations.ai/prompt/cartoon-ant-refusing-shivering-grasshopper-winter-scene?width=1920&height=1080",
+        backgroundClass:
+          "bg-gradient-to-br from-blue-100/70 via-gray-300/70 to-brown-200/70",
+        characters: [
+          {
+            image:
+              "https://image.pollinations.ai/prompt/cartoon-ant-looking-strict-grasshopper-sad-begging-winter?width=200&height=200",
+            name: "Tough Ant",
+            position: { left: "45%", top: "56%" },
+            delay: 800,
+          },
+        ],
+      },
+      {
+        id: 4,
+        title: "🌟 Moral",
+        subtitle: "Work Brings Reward",
+        story: "Moral: Always be prepared—hard work pays off!",
+        backgroundImage:
+          "https://image.pollinations.ai/prompt/cartoon-ant-looking-wise-winter-background-grasshopper-in-distance-sunset?width=1920&height=1080",
+        backgroundClass:
+          "bg-gradient-to-br from-yellow-200/70 via-white/70 to-blue-200/70",
+        characters: [
+          {
+            image:
+              "https://image.pollinations.ai/prompt/cartoon-ant-looking-thoughtful-lesson-learned-winter-evening?width=200&height=200",
+            name: "Wise Ant",
+            position: { left: "40%", top: "50%" },
+            delay: 600,
+          },
+          {
+            emoji: "🌟",
+            name: "Moral",
+            position: { left: "65%", top: "25%" },
+            delay: 1200,
+          },
+        ],
+      },
+    ],
+  },
 ];
