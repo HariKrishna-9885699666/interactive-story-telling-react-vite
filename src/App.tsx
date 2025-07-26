@@ -7,6 +7,7 @@ import StorySlide from './components/StorySlide';
 import VoiceIndicator from './components/VoiceIndicator';
 import { useVoiceNarration } from './hooks/useVoiceNarration';
 import { stories } from './data/storyData';
+import { preloadImages } from './utils/preloadImages';
 
 
 function App() {
@@ -172,6 +173,18 @@ function App() {
 
   // Get background image for current slide if available
   const currentBgImage = !isLoading && selectedStoryId && !showStart && storySlides[currentSlide]?.backgroundImage;
+
+  // Preload all background and character images for the selected story
+  useEffect(() => {
+    if (!selectedStoryId) return;
+    const bgImages = storySlides.map(slide => slide.backgroundImage).filter((img): img is string => typeof img === 'string');
+    const charImages = storySlides.flatMap(slide =>
+      slide.characters
+        .map(char => char.image)
+        .filter((img): img is string => typeof img === 'string')
+    );
+    preloadImages([...bgImages, ...charImages]);
+  }, [selectedStoryId, storySlides]);
 
   return (
     <div className="min-h-screen bg-black overflow-hidden relative text-base sm:text-lg">
