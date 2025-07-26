@@ -13,6 +13,8 @@ export const useVoiceNarration = () => {
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const wordsRef = useRef<string[]>([]);
   const onWordHighlightRef = useRef<((wordIndex: number) => void) | undefined>(undefined);
+  const fallbackTimerRef = useRef<number | null>(null);
+  const lastBoundaryTimeRef = useRef<number>(0);
 
   // Load available voices
   useEffect(() => {
@@ -28,23 +30,30 @@ export const useVoiceNarration = () => {
     return () => speechSynthesis.removeEventListener('voiceschanged', loadVoices);
   }, []);
 
+  // Detect if we're on mobile
+  const isMobile = useCallback(() => {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  }, []);
+
   // Speak with word highlighting (syncs with voice, fallback for mobile)
   const speakNarration = useCallback((text: string, onWordHighlight?: (wordIndex: number) => void) => {
     speechSynthesis.cancel();
     setIsSpeaking(false);
     setIsPaused(false);
     setCurrentWordIndex(-1);
+    
+    // Clear any existing fallback timer
+    if (fallbackTimerRef.current) {
+      clearInterval(fallbackTimerRef.current);
+      fallbackTimerRef.current = null;
+    }
+    
     if (!isEnabled || isMuted || !text.trim()) return;
 
     setTimeout(() => {
       const words = text.match(/[\w']+(?:[.,!?;:])?/g) || [];
       wordsRef.current = words;
       onWordHighlightRef.current = onWordHighlight;
-
-      // --- Fallback timer for mobile ---
-      let fallbackTimer: number | null = null;
-      let fallbackIndex = 0;
-      let boundaryFired = false;
 
       // Create a more accurate mapping of character positions to word indices
       const charToWordMap = new Map<number, number>();
@@ -73,33 +82,40 @@ export const useVoiceNarration = () => {
       if (selectedVoice) utterance.voice = selectedVoice;
       utteranceRef.current = utterance;
 
-      // Fallback: If onboundary doesn't fire, use timer
-      const startFallback = () => {
-        if (fallbackTimer) clearInterval(fallbackTimer);
-        fallbackIndex = 0;
-        fallbackTimer = window.setInterval(() => {
-          setCurrentWordIndex(idx => {
-            const nextIdx = idx < 0 ? 0 : idx + 1;
-            if (nextIdx < words.length) {
-              onWordHighlight?.(nextIdx);
-              return nextIdx;
-            } else {
-              if (fallbackTimer) clearInterval(fallbackTimer);
-              return -1;
+      let currentWordIndexInternal = -1;
+      const mobile = isMobile();
+      
+      // Fallback timer function
+      const startFallbackTimer = () => {
+        if (fallbackTimerRef.current) clearInterval(fallbackTimerRef.current);
+        
+        fallbackTimerRef.current = window.setInterval(() => {
+          currentWordIndexInternal++;
+          if (currentWordIndexInternal < words.length) {
+            setCurrentWordIndex(currentWordIndexInternal);
+            onWordHighlight?.(currentWordIndexInternal);
+          } else {
+            if (fallbackTimerRef.current) {
+              clearInterval(fallbackTimerRef.current);
+              fallbackTimerRef.current = null;
             }
-          });
-        }, 450); // Adjusted speed for better sync
+            setCurrentWordIndex(-1);
+          }
+        }, 450);
       };
 
+      // Enhanced boundary event handler
       utterance.onboundary = (event) => {
         if (event.name === 'word') {
-          boundaryFired = true;
-          if (fallbackTimer) clearInterval(fallbackTimer);
+          lastBoundaryTimeRef.current = Date.now();
+          
           const charIndex = event.charIndex;
           let wordIndex = -1;
+          
           if (charToWordMap.has(charIndex)) {
             wordIndex = charToWordMap.get(charIndex) || -1;
           } else {
+            // Try nearby characters
             for (let i = 1; i <= 5; i++) {
               if (charToWordMap.has(charIndex - i)) {
                 wordIndex = charToWordMap.get(charIndex - i) || -1;
@@ -111,42 +127,86 @@ export const useVoiceNarration = () => {
               }
             }
           }
+          
           if (wordIndex >= 0 && wordIndex < words.length) {
+            currentWordIndexInternal = wordIndex;
             setCurrentWordIndex(wordIndex);
             onWordHighlight?.(wordIndex);
+            
+            // If we're getting boundary events, clear fallback timer
+            if (fallbackTimerRef.current) {
+              clearInterval(fallbackTimerRef.current);
+              fallbackTimerRef.current = null;
+            }
           }
         }
       };
 
       utterance.onstart = () => {
         setIsSpeaking(true);
+        currentWordIndexInternal = -1;
+        lastBoundaryTimeRef.current = Date.now();
+        
         setTimeout(() => {
+          // Always highlight first word
+          currentWordIndexInternal = 0;
           setCurrentWordIndex(0);
           onWordHighlight?.(0);
-          // If onboundary doesn't fire in 500ms, start fallback
+          
+          // For mobile or as a safety net, check if boundary events are working
           setTimeout(() => {
-            if (!boundaryFired) startFallback();
-          }, 500);
+            const timeSinceLastBoundary = Date.now() - lastBoundaryTimeRef.current;
+            
+            // If we haven't received boundary events recently, or we're on mobile, start fallback
+            if (mobile || timeSinceLastBoundary > 800) {
+              console.log('Starting fallback timer for word highlighting');
+              startFallbackTimer();
+            }
+          }, 1000);
+          
+          // Also set up a monitoring interval to detect if boundary events stop coming
+          const boundaryMonitor = setInterval(() => {
+            if (!speechSynthesis.speaking) {
+              clearInterval(boundaryMonitor);
+              return;
+            }
+            
+            const timeSinceLastBoundary = Date.now() - lastBoundaryTimeRef.current;
+            if (timeSinceLastBoundary > 1200 && currentWordIndexInternal < words.length - 1) {
+              console.log('Boundary events stopped, switching to fallback');
+              clearInterval(boundaryMonitor);
+              startFallbackTimer();
+            }
+          }, 1000);
+          
         }, 200);
       };
+
       utterance.onend = () => {
         setIsSpeaking(false);
         setIsPaused(false);
         setCurrentWordIndex(-1);
-        if (fallbackTimer) clearInterval(fallbackTimer);
+        if (fallbackTimerRef.current) {
+          clearInterval(fallbackTimerRef.current);
+          fallbackTimerRef.current = null;
+        }
       };
+
       utterance.onerror = () => {
         setIsSpeaking(false);
         setIsPaused(false);
         setCurrentWordIndex(-1);
-        if (fallbackTimer) clearInterval(fallbackTimer);
+        if (fallbackTimerRef.current) {
+          clearInterval(fallbackTimerRef.current);
+          fallbackTimerRef.current = null;
+        }
       };
 
       setTimeout(() => {
         speechSynthesis.speak(utterance);
       }, 300);
     }, 100);
-  }, [isEnabled, isMuted, selectedVoice]);
+  }, [isEnabled, isMuted, selectedVoice, isMobile]);
 
   const stop = useCallback(() => {
     console.log('Stopping speech');
@@ -154,12 +214,20 @@ export const useVoiceNarration = () => {
     setIsSpeaking(false);
     setIsPaused(false);
     setCurrentWordIndex(-1);
+    if (fallbackTimerRef.current) {
+      clearInterval(fallbackTimerRef.current);
+      fallbackTimerRef.current = null;
+    }
   }, []);
 
   const pause = useCallback(() => {
     if (speechSynthesis.speaking && !speechSynthesis.paused) {
       speechSynthesis.pause();
       setIsPaused(true);
+      if (fallbackTimerRef.current) {
+        clearInterval(fallbackTimerRef.current);
+        fallbackTimerRef.current = null;
+      }
     }
   }, []);
 
@@ -167,6 +235,8 @@ export const useVoiceNarration = () => {
     if (speechSynthesis.paused) {
       speechSynthesis.resume();
       setIsPaused(false);
+      // Restart monitoring for boundary events after resume
+      lastBoundaryTimeRef.current = Date.now();
     }
   }, []);
 
