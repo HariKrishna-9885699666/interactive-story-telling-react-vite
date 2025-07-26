@@ -44,7 +44,7 @@ export const useVoiceNarration = () => {
     
     // Clear any existing fallback timer
     if (fallbackTimerRef.current) {
-      clearInterval(fallbackTimerRef.current);
+      clearTimeout(fallbackTimerRef.current);
       fallbackTimerRef.current = null;
     }
     
@@ -85,23 +85,47 @@ export const useVoiceNarration = () => {
       let currentWordIndexInternal = -1;
       const mobile = isMobile();
       
-      // Fallback timer function
+      // Calculate dynamic timing for each word based on speech characteristics
+      const calculateWordTiming = (word: string, rate: number = 0.8) => {
+        let baseTime = 300; // Base time per word in ms
+        
+        // Adjust for word length
+        baseTime += word.length * 30;
+        
+        // Adjust for punctuation (natural pauses)
+        if (/[.,;:]$/.test(word)) baseTime += 150;
+        if (/[!?]$/.test(word)) baseTime += 200;
+        if (/[.]$/.test(word)) baseTime += 250; // Sentence endings
+        
+        // Adjust for speech rate
+        baseTime = baseTime / rate;
+        
+        // Ensure minimum and maximum bounds
+        return Math.max(200, Math.min(baseTime, 1200));
+      };
+
+      // Fallback timer function with dynamic timing
       const startFallbackTimer = () => {
         if (fallbackTimerRef.current) clearInterval(fallbackTimerRef.current);
         
-        fallbackTimerRef.current = window.setInterval(() => {
+        const scheduleNextWord = () => {
           currentWordIndexInternal++;
           if (currentWordIndexInternal < words.length) {
             setCurrentWordIndex(currentWordIndexInternal);
             onWordHighlight?.(currentWordIndexInternal);
+            
+            // Calculate timing for next word
+            const nextWordTime = calculateWordTiming(words[currentWordIndexInternal], 0.8);
+            fallbackTimerRef.current = window.setTimeout(scheduleNextWord, nextWordTime);
           } else {
-            if (fallbackTimerRef.current) {
-              clearInterval(fallbackTimerRef.current);
-              fallbackTimerRef.current = null;
-            }
             setCurrentWordIndex(-1);
+            fallbackTimerRef.current = null;
           }
-        }, 450);
+        };
+        
+        // Start with first word timing
+        const firstWordTime = calculateWordTiming(words[0] || '', 0.8);
+        fallbackTimerRef.current = window.setTimeout(scheduleNextWord, firstWordTime);
       };
 
       // Enhanced boundary event handler
@@ -135,7 +159,7 @@ export const useVoiceNarration = () => {
             
             // If we're getting boundary events, clear fallback timer
             if (fallbackTimerRef.current) {
-              clearInterval(fallbackTimerRef.current);
+              clearTimeout(fallbackTimerRef.current);
               fallbackTimerRef.current = null;
             }
           }
@@ -160,9 +184,11 @@ export const useVoiceNarration = () => {
             // If we haven't received boundary events recently, or we're on mobile, start fallback
             if (mobile || timeSinceLastBoundary > 800) {
               console.log('Starting fallback timer for word highlighting');
+              // Start from word 1 since we already highlighted word 0
+              currentWordIndexInternal = 0;
               startFallbackTimer();
             }
-          }, 1000);
+          }, 800); // Reduced delay for better sync
           
           // Also set up a monitoring interval to detect if boundary events stop coming
           const boundaryMonitor = setInterval(() => {
@@ -172,12 +198,12 @@ export const useVoiceNarration = () => {
             }
             
             const timeSinceLastBoundary = Date.now() - lastBoundaryTimeRef.current;
-            if (timeSinceLastBoundary > 1200 && currentWordIndexInternal < words.length - 1) {
+            if (timeSinceLastBoundary > 1000 && currentWordIndexInternal < words.length - 1) {
               console.log('Boundary events stopped, switching to fallback');
               clearInterval(boundaryMonitor);
               startFallbackTimer();
             }
-          }, 1000);
+          }, 800);
           
         }, 200);
       };
@@ -187,7 +213,7 @@ export const useVoiceNarration = () => {
         setIsPaused(false);
         setCurrentWordIndex(-1);
         if (fallbackTimerRef.current) {
-          clearInterval(fallbackTimerRef.current);
+          clearTimeout(fallbackTimerRef.current);
           fallbackTimerRef.current = null;
         }
       };
@@ -197,7 +223,7 @@ export const useVoiceNarration = () => {
         setIsPaused(false);
         setCurrentWordIndex(-1);
         if (fallbackTimerRef.current) {
-          clearInterval(fallbackTimerRef.current);
+          clearTimeout(fallbackTimerRef.current);
           fallbackTimerRef.current = null;
         }
       };
@@ -225,7 +251,7 @@ export const useVoiceNarration = () => {
       speechSynthesis.pause();
       setIsPaused(true);
       if (fallbackTimerRef.current) {
-        clearInterval(fallbackTimerRef.current);
+        clearTimeout(fallbackTimerRef.current);
         fallbackTimerRef.current = null;
       }
     }
