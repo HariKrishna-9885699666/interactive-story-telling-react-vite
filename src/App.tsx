@@ -1,19 +1,16 @@
 import { User, Home } from 'lucide-react';
 import ReactModal from 'react-modal';
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { ChevronLeft, ChevronRight, Play, Pause, Volume2, VolumeX, Mic, MicOff } from 'lucide-react';
 import LoadingScreen from './components/LoadingScreen';
 import StorySlide from './components/StorySlide';
-import VoiceIndicator from './components/VoiceIndicator';
 import { useVoiceNarration } from './hooks/useVoiceNarration';
 import { stories } from './data/storyData';
 import { preloadImages } from './utils/preloadImages';
 
 
 function App() {
-
   // Update document title based on selected story
-  
   const [showUserModal, setShowUserModal] = useState(false);
 
   // Modal styles for center display
@@ -29,7 +26,6 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedStoryId, setSelectedStoryId] = useState<string | null>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [narrationMessage, setNarrationMessage] = useState('');
   const [showStart, setShowStart] = useState(true);
 
   // Update document title based on selected story
@@ -66,15 +62,6 @@ function App() {
     }, 2000);
     return () => clearTimeout(timer);
   }, []);
-
-  // Handle narration updates
-  useEffect(() => {
-    if (isSpeaking) {
-      setNarrationMessage('Telling the story...');
-    } else {
-      setNarrationMessage('');
-    }
-  }, [isSpeaking]);
 
 
   // Prevent multiple voice narrations automatically, but always allow manual replay
@@ -115,12 +102,6 @@ function App() {
     stop();
     setCurrentSlide(prev => prev > 0 ? prev - 1 : prev);
   }, [stop]);
-
-
-
-  // Remove narration trigger from here; will be handled in StorySlide
-
-
 
   // Keyboard controls
   useEffect(() => {
@@ -212,10 +193,7 @@ function App() {
       {/* Story Selection Overlay */}
       {!isLoading && !selectedStoryId && (
         <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/90 px-2">
-          <h1 className="text-3xl sm:text-4xl md:text-6xl font-black text-white mb-4 drop-shadow-lg text-center">
-            Discover a Magical Story
-            <span className="block w-24 h-1 mx-auto mt-4 bg-gradient-to-r from-yellow-400 via-pink-400 to-blue-400 rounded-full"></span>
-          </h1>
+          <h1 className="text-3xl sm:text-4xl md:text-6xl font-black text-white mb-8 drop-shadow-lg text-center">Select a Story</h1>
           <div className="w-full max-w-5xl flex-1 overflow-y-auto">
             <div className="grid grid-cols-3 gap-3 sm:gap-6 md:gap-8 justify-center">
               {stories.map(story => (
