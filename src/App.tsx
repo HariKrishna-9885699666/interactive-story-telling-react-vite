@@ -211,21 +211,23 @@ function App() {
 
       {/* Story Selection Overlay */}
       {!isLoading && !selectedStoryId && (
-        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/90 px-4">
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/90 px-2">
           <h1 className="text-3xl sm:text-4xl md:text-6xl font-black text-white mb-8 drop-shadow-lg text-center">Select a Story</h1>
-          <div className="flex flex-wrap gap-6 md:gap-8 justify-center w-full max-w-5xl">
-            {stories.map(story => (
-              <button
-                key={story.id}
-                className="flex flex-col items-center bg-white/10 hover:bg-cyan-500/30 border-2 border-white/20 rounded-2xl shadow-lg p-4 sm:p-6 w-64 sm:w-72 transition-all duration-300"
-                onClick={() => setSelectedStoryId(story.id)}
-              >
-                <img src={story.coverImage} alt={story.title} className="w-full h-32 sm:h-40 object-cover rounded-xl mb-3 sm:mb-4" />
-                <span className="text-lg sm:text-2xl font-bold text-white mb-2 drop-shadow text-center">{story.title}</span>
-              </button>
-            ))}
+          <div className="w-full max-w-5xl flex-1 overflow-y-auto">
+            <div className="grid grid-cols-3 gap-3 sm:gap-6 md:gap-8 justify-center">
+              {stories.map(story => (
+                <button
+                  key={story.id}
+                  className="flex flex-col items-center bg-white/10 hover:bg-cyan-500/30 border-2 border-white/20 rounded-2xl shadow-lg p-2 sm:p-4 w-full transition-all duration-300"
+                  onClick={() => setSelectedStoryId(story.id)}
+                >
+                  <img src={story.coverImage} alt={story.title} className="w-full h-24 sm:h-32 object-cover rounded-xl mb-2 sm:mb-3" />
+                  <span className="text-xs sm:text-lg font-bold text-white mb-1 sm:mb-2 drop-shadow text-center">{story.title}</span>
+                </button>
+              ))}
+            </div>
           </div>
-          <p className="mt-8 sm:mt-10 text-white/80 text-base sm:text-lg text-center">Choose a story to begin your adventure!</p>
+          <p className="mt-6 sm:mt-10 text-white/80 text-base sm:text-lg text-center">Choose a story to begin your adventure!</p>
         </div>
       )}
 
